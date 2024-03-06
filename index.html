@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Postal Code Finder</title>
+  </head>
+  <body>
+    <h2>Paste Postal Codes Here (Separate them by spaces or new lines):</h2>
+    <textarea id="postalCodesInput" rows="10" cols="50"></textarea><br />
+    <button onclick="findPostalCodes()">Find Postal Codes</button>
+    <div>
+        <h2>Results:</h2>
+        <table style="border: 1px solid black;">
+          <thead>
+            <tr>
+              <th>FSA</th>
+              <th>City</th>
+            </tr>
+          </thead>
+          <tbody id="results">
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Top 30:</h2>
+        <div id="fsaCountTable"></div>
+    </div>
+    
+
+    <script src="postalFSA.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
