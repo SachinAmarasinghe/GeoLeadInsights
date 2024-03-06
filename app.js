@@ -1,43 +1,58 @@
+let individualResults = [];
+const resultsPerPage = 10; // Adjust as needed
+let currentPage = 1;
+
 async function findPostalCodes() {
     const input = document.getElementById("postalCodesInput").value;
 
     const lines = input.split(/\r?\n/);
-    const postalCodes = lines.map(line => 
-        line.toUpperCase()
-            .replace(/\s+/g, '')
-            .substring(0, 3)
+    const postalCodes = lines.map(line =>
+        line.trim().toUpperCase().replace(/\s+/g, '').substring(0, 3)
     );
 
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = '';
-    let postalFSAData = []
+    let postalFSAData = [];
+    let loader = document.getElementById('loader');
+    loader.style.display = 'block'; // Show loader
 
     try {
         const response = await fetch('transformed_postal_fsa.json'); // Adjust the path as necessary
         postalFSAData = await response.json();
-
-        postalCodes.forEach(code => {
-            const city = postalFSAData.find(entry => entry.Postal_FSA.includes(code.substring(0, 3)));
-            if (city) {
-                resultsDiv.innerHTML += `<tr><td>${code}</td><td>${city.City_Name}</td></tr>`;
-            } else {
-                resultsDiv.innerHTML += `<tr><td>${code}</td><td>Not Found</td></tr>`;
-            }
-        });
     } catch (error) {
         console.error('Error loading postal data:', error);
-        resultsDiv.innerHTML = `<p>Error loading postal data. Please check console for details.</p>`;
+        return;
+    } finally {
+        loader.style.display = 'none'; // Hide loader after fetching data
     }
 
-    // Count FSAs
-    const fsaCounts = {};
-    postalCodes.forEach(code => {
-        const fsa = code.substring(0, 3).toUpperCase();
-        fsaCounts[fsa] = (fsaCounts[fsa] || 0) + 1;
+    // Display individual results with pagination
+    const individualResultsTable = document.getElementById('individualResultsTable');
+    individualResultsTable.innerHTML = '<tr><th>Postal Code</th><th>City</th></tr>';
+
+
+
+    let startIndex = (currentPage - 1) * resultsPerPage;
+    let endIndex = startIndex + resultsPerPage;
+
+    individualResults = []; // Initialize the individual results array
+
+    postalCodes.forEach((code, index) => {
+        const cityEntry = postalFSAData.find(entry => entry.Postal_FSA.includes(code.substring(0, 3)));
+        individualResults.push({
+            Code: code,
+            City: cityEntry ? cityEntry.City_Name : "Not Found"
+        });
+
+        // Display individual results with pagination
+        if (index >= startIndex && index < endIndex) {
+            individualResultsTable.innerHTML += `<tr><td>${code}</td><td>${cityEntry ? cityEntry.City_Name : "Not Found"}</td></tr>`;
+        }
     });
 
-    // Assign Cities and Prepare Data for Display
-    const fsaCityCount = Object.keys(fsaCounts).map(fsa => {
+    // Count FSAs and Assign Cities
+    const fsaCounts = {};
+    const fsaCityCount = postalCodes.map(code => {
+        const fsa = code.substring(0, 3).toUpperCase();
+        fsaCounts[fsa] = (fsaCounts[fsa] || 0) + 1;
         const cityEntry = postalFSAData.find(entry => entry.Postal_FSA.includes(fsa));
         return {
             FSA: fsa,
@@ -49,12 +64,15 @@ async function findPostalCodes() {
     // Sort by Count Descending and Take Top 30
     const top30FSAs = fsaCityCount.sort((a, b) => b.Count - a.Count).slice(0, 30);
 
-    // Proceed to Step 3: Display the table
+    // Display the table
     displayFSATable(top30FSAs);
+
+    // Display the grouped city table
+    displayGroupedCityTable();
 }
 
 function displayFSATable(topFSAs) {
-    const resultsDiv = document.getElementById('fsaCountTable'); // Assuming you have a div with id="results" in your HTML
+    const resultsDiv = document.getElementById('fsaCountTable');
     const table = document.createElement('table');
     table.innerHTML = `<tr><th>FSA</th><th>City</th><th>Count</th></tr>`;
 
@@ -66,4 +84,58 @@ function displayFSATable(topFSAs) {
     // Clear previous results and display the new table
     resultsDiv.innerHTML = '';
     resultsDiv.appendChild(table);
+}
+
+function exportCSV() {
+    const csvContent = "data:text/csv;charset=utf-8," + individualResults.map(row => Object.values(row).join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "individual_results.csv");
+    document.body.appendChild(link);
+    link.click();
+}
+
+function changePage(change) {
+    const totalPages = Math.ceil(individualResults.length / resultsPerPage);
+    currentPage += change;
+
+    if (currentPage < 1) {
+        currentPage = 1;
+    } else if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    let startIndex = (currentPage - 1) * resultsPerPage;
+    let endIndex = startIndex + resultsPerPage;
+
+    const individualResultsTable = document.getElementById('individualResultsTable');
+    individualResultsTable.innerHTML = '<tr><th>Postal Code</th><th>City</th></tr>';
+    for (let i = startIndex; i < endIndex && i < individualResults.length; i++) {
+        const { Code, City } = individualResults[i];
+        individualResultsTable.innerHTML += `<tr><td>${Code}</td><td>${City}</td></tr>`;
+    }
+
+    document.getElementById('currentPage').innerText = currentPage;
+}
+
+function displayGroupedCityTable() {
+    const groupedCityTable = document.getElementById('groupedCityTable');
+    groupedCityTable.innerHTML = '<tr><th>City</th><th>Postal Codes/FSAs</th><th>Count</th></tr>';
+
+    const cityGroups = {};
+
+    individualResults.forEach(({ City, Code }) => {
+        cityGroups[City] = cityGroups[City] || { Codes: new Set(), Count: 0 };
+        cityGroups[City].Codes.add(Code); // Use a Set to store unique postal codes
+        cityGroups[City].Count++;
+    });
+
+    // Sort city groups by count in descending order
+    const sortedCityGroups = Object.entries(cityGroups)
+        .sort(([, a], [, b]) => b.Count - a.Count);
+
+    for (const [city, { Codes, Count }] of sortedCityGroups) {
+        groupedCityTable.innerHTML += `<tr><td>${city}</td><td>${[...Codes].join(', ')}</td><td>${Count}</td></tr>`;
+    }
 }
