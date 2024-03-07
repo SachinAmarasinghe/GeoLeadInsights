@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap')
+
+$font-primary: "Roboto Mono", monospace
+$font-secondary: "Kode Mono", monospace
+
+$black: #000000
+$white: #ffffff
+$primary: #00D0D9
+$border-black: #353539
+
+@mixin border
+    border-color: $border-black
+    border-width: 1px
+
+body
+    font-family: $font-primary
+    font-weight: 400
+    padding: 0
+    margin: 0
+    background-color: $black
+    color: $white
+
+h1,h2,h3,h4,h5,h6
+    margin: 0
+    font-family: $font-secondary
+    font-weight: 600
+
+p
+    font-family: $font-primary
+    font-size: 16px
+    font-weight: 400
+
+.border
+    &.bottom
+        border-bottom: solid
+        @include border
+
+.btn
+    background-color: $primary
+    color: $black
+    padding: 10px 30px
+    font-family: $font-secondary
+    font-size: 18px
+    font-weight: 800
+    border: 0px
+    &:hover
+        cursor: pointer
+        background-color: darken($primary,8 )
+    &.btn-small
+        font-size: 12px
+        padding: 10px 20px
+
+.header
+    border-bottom: solid
+    @include border
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    .logo
+        display: inline-block
+        padding: 20px
+        font-size: 32px
+        font-family: $font-secondary
+        font-weight: bold
+        border-right: solid
+        @include border
+        cursor: pointer
+    .link
+        display: inline-block
+        padding: 30px
+        font-family: $font-secondary
+        font-weight: bold
+        border-left: solid
+        @include border
+        font-size: 16px
+        &:hover
+            cursor: pointer
+            background-color: $primary
+            color: $black
+
+.hero
+    min-height: 100vh
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 20px
+    text-align: center
+    background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 0%), url(../images/background-image.jpg)
+    background-position: center
+    background-repeat: no-repeat
+    background-size: cover
+    border-bottom: solid
+    @include border
+    h1
+        max-width: 860px
+        padding: 0 20px
+        font-size: 40px
+    p
+        max-width: 585px
+        padding: 0 20px
+        font-size: 20px
