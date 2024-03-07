@@ -139,30 +139,32 @@
     <div class="container">
       <h2>Paste Postal Codes Here (Separate them by spaces or new lines):</h2>
       <textarea id="postalCodesInput" rows="10" cols="50"></textarea><br />
-      <button onclick="findPostalCodes()">Find Postal Codes</button>
+      <button onclick="analysePostCodes()">Find Postal Codes</button>
       <div id="loader" style="display: none">Loading.....</div>
-      <div>
-        <h2>Results:</h2>
-        <button onclick="exportCSV()">Export CSV</button>
-        <hr />
-        <div id="pagination">
-          <button onclick="changePage(-1)">Previous</button>
-          <span>Page <span id="currentPage">1</span></span>
-          <button onclick="changePage(1)">Next</button>
+      <div id="results" style="display: none">
+        <div>
+          <h2>Results:</h2>
+          <button onclick="exportCSV()">Export CSV</button>
+          <hr />
+          <div id="pagination">
+            <button onclick="changePage(-1)">Previous</button>
+            <span>Page <span id="currentPage">1</span></span>
+            <button onclick="changePage(1)">Next</button>
+          </div>
+          <table id="individualResultsTable"></table>
         </div>
-        <table id="individualResultsTable"></table>
-      </div>
-      <div>
-        <h2>Top 30:</h2>
-        <table id="fsaCountTable"></table>
-      </div>
+        <div>
+          <h2>Top 30:</h2>
+          <table id="fsaCountTable"></table>
+        </div>
 
-      <div>
-        <h2>Grouped data</h2>
-        <table id="groupedCityTable"></table>
+        <div>
+          <h2>Grouped data</h2>
+          <table id="groupedCityTable"></table>
+        </div>
       </div>
     </div>
-    <script src="postalFSA.js"></script>
-    <script src="app.js"></script>
+    <!-- <script src="app.js"></script> -->
+    <script src="newapp.js"></script>
   </body>
 </html>
