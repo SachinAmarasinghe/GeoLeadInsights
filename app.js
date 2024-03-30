@@ -50,16 +50,22 @@ async function findPostalCodes() {
 
     // Count FSAs and Assign Cities
     const fsaCounts = {};
-    const fsaCityCount = postalCodes.map(code => {
-        const fsa = code.substring(0, 3).toUpperCase();
-        fsaCounts[fsa] = (fsaCounts[fsa] || 0) + 1;
-        const cityEntry = postalFSAData.find(entry => entry.Postal_FSA.includes(fsa));
+
+    postalCodes.forEach(code => {
+        fsaCounts[code] = (fsaCounts[code] || 0) + 1;
+    })
+
+    const fsaCityCount = Object.keys(fsaCounts).map(code => {
+        const cityEntry = postalFSAData.find(entry => entry.Postal_FSA.includes(code));
+        if (!cityEntry) {
+            return null;
+        }
         return {
-            FSA: fsa,
-            City: cityEntry ? cityEntry.City_Name : "Unknown",
-            Count: fsaCounts[fsa]
+            FSA: code,
+            City: cityEntry ? cityEntry.City_Name : "Not Found",
+            Count: fsaCounts[code]
         };
-    });
+    }).filter(entry => entry !== null);
 
     // Sort by Count Descending and Take Top 30
     const top30FSAs = fsaCityCount.sort((a, b) => b.Count - a.Count).slice(0, 30);
