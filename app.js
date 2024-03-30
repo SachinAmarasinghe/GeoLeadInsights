@@ -12,6 +12,8 @@ async function findPostalCodes() {
 
     let postalFSAData = [];
     let loader = document.getElementById('loader');
+    let resultsShowDiv = document.getElementById('results');
+    resultsShowDiv.style.display = 'none'
     loader.style.display = 'block'; // Show loader
 
     try {
@@ -22,6 +24,7 @@ async function findPostalCodes() {
         return;
     } finally {
         loader.style.display = 'none'; // Hide loader after fetching data
+        resultsShowDiv.style.display = 'block'
     }
 
     // Display individual results with pagination
