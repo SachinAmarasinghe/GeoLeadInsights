@@ -102,3 +102,52 @@ p
         max-width: 585px
         padding: 0 20px
         font-size: 20px
+.container
+    width: 100%
+    max-width: 1300px
+    margin: 0 auto
+    padding: 26px 117px
+    border-bottom: solid
+    border-left: solid
+    border-right: solid
+    @include border
+
+.form
+    width: 100%
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: flex-end
+    gap: 18px
+    textarea
+        box-sizing: border-box
+        display: block
+        background-color: #2C2B31
+        border: 1px solid $black
+        width: 100%
+        padding: 20px
+        font-size: 12px
+        color: $white
+        border-radius: 0
+        &:focus-visible,&:focus,&:active
+            border-color: $primary
+            outline: none
+
+.heading_H2
+    border-bottom: solid
+    @include border
+    h2
+        width: 100%
+        max-width: 1300px
+        margin: 0 auto
+        padding: 26px 117px
+        border-left: solid
+        border-right: solid
+        @include border
+
+.loader
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    padding: 20px 0
