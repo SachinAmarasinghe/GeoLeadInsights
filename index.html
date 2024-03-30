@@ -144,7 +144,9 @@
       <div id="results" style="display: none">
         <div>
           <h2>Results:</h2>
-          <button onclick="exportCSV()">Export CSV</button>
+          <button onclick="exportIndividual()">
+            Export CSV (Individual Results)
+          </button>
           <hr />
           <div id="pagination">
             <button onclick="changePage(-1)">Previous</button>
@@ -155,11 +157,15 @@
         </div>
         <div>
           <h2>Top 30:</h2>
+          <button onclick="exportTopThirty()">Export CSV (Top 30 FSAs)</button>
           <table id="fsaCountTable"></table>
         </div>
 
         <div>
           <h2>Grouped data</h2>
+          <button onclick="exportByCities()">
+            Export CSV (Group by Cities)
+          </button>
           <table id="groupedCityTable"></table>
         </div>
       </div>

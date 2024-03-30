@@ -1,6 +1,8 @@
 let individualResults = [];
 const resultsPerPage = 10; // Adjust as needed
 let currentPage = 1;
+let sortedCityGroups = [];
+let top30FSAs = [];
 
 async function findPostalCodes() {
     const input = document.getElementById("postalCodesInput").value;
@@ -71,7 +73,8 @@ async function findPostalCodes() {
     }).filter(entry => entry !== null);
 
     // Sort by Count Descending and Take Top 30
-    const top30FSAs = fsaCityCount.sort((a, b) => b.Count - a.Count).slice(0, 30);
+    top30FSAs = []
+    top30FSAs = fsaCityCount.sort((a, b) => b.Count - a.Count).slice(0, 30);
 
     // Display the table
     displayFSATable(top30FSAs);
@@ -95,8 +98,21 @@ function displayFSATable(topFSAs) {
     resultsDiv.appendChild(table);
 }
 
-function exportCSV() {
-    const csvContent = "data:text/csv;charset=utf-8," + individualResults.map(row => Object.values(row).join(',')).join('\n');
+function exportIndividual() {
+    exportCSV(individualResults)
+}
+
+function exportTopThirty() {
+    exportCSV(top30FSAs)
+}
+
+function exportByCities() {
+    exportCSV(sortedCityGroups)
+}
+
+
+function exportCSV(results) {
+    const csvContent = "data:text/csv;charset=utf-8," + results.map(row => Object.values(row).join(',')).join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -141,7 +157,8 @@ function displayGroupedCityTable() {
     });
 
     // Sort city groups by count in descending order
-    const sortedCityGroups = Object.entries(cityGroups)
+    sortedCityGroups = []
+    sortedCityGroups = Object.entries(cityGroups)
         .sort(([, a], [, b]) => b.Count - a.Count);
 
     for (const [city, { Codes, Count }] of sortedCityGroups) {
