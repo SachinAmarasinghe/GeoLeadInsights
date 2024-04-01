@@ -3,11 +3,11 @@ import { Link } from "gatsby"
 
 const Header = ({ siteTitle }) => (
   <nav className="header">
-    <Link className="logo">GeoLead Analytics</Link>
+    <Link className="logo" to="">GeoLead Analytics</Link>
     <div>
-      <Link className="link">Solutions</Link>
-      <Link className="link">About</Link>
-      <Link className="link">Contact us</Link>
+      <Link className="link" to="">Solutions</Link>
+      <Link className="link" to="">About</Link>
+      <Link className="link" to="">Contact us</Link>
     </div>
   </nav>
 )

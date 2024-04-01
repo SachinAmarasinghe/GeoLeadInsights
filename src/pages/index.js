@@ -10,7 +10,7 @@ const IndexPage = () => (
     <section className="hero">
       <h1>Unlock the Power of Geo Location Analytics for Enhanced Marketing Strategies</h1>
       <p>Gain valuable insights to supercharge your marketing efforts based on Geo Location data.</p>
-      <Link className="btn">Get started</Link>
+      <Link className="btn" to="">Get started</Link>
     </section>
     <section>
       <PostcodeAnalysis />
