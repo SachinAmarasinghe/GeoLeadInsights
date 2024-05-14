@@ -1,12 +1,12 @@
-
-import EmailValidatorForm from "./api/email_validator/emailValidatorForm";
+import VerifyForm from "./components/verifyform";
 import RootLayout from "./layout";
 
 export default function Home() {
-
   return (
     <RootLayout>
-      <EmailValidatorForm/>
+      <div>
+        <VerifyForm />
+      </div>
     </RootLayout>
   );
 }
