@@ -47,6 +47,8 @@ async function getTopThirty() {
     const cityWithPostcode = await assignCities(postalCodesFromInput);
 
     console.log("top 30 : ",cityWithPostcode)
+
+    
 }
 
 getTopThirty()
